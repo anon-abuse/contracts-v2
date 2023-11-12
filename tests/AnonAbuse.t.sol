@@ -63,7 +63,7 @@ contract AnonAbuseTest is Test, Loader {
 
     function testGetters() public {
         // Retrieve the merkleRoot for this groupId
-        address[] memory leafs = anonAbuse.getLeavesFromAttackerAddress(hackerAddress);
+        address[] memory leafs = anonAbuse.getLeafsromAttackerAddress(hackerAddress);
 
         for (uint i = 0; i < NUM_TESTS; i++) {
             assertEq(hackedAddress[i], leafs[i]);

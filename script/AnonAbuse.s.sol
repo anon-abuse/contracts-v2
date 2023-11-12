@@ -4,17 +4,23 @@ pragma solidity ^0.8.17;
 import "forge-std/Script.sol";
 import "../contracts/AnonAbuse.sol";
 import "../tests/lib/Loader.sol";
+import {BonsaiRelay} from "bonsai/BonsaiRelay.sol";
+import {IRiscZeroVerifier} from "bonsai/IRiscZeroVerifier.sol";
+import {ControlID, RiscZeroGroth16Verifier} from "bonsai/groth16/RiscZeroGroth16Verifier.sol";
 
 contract AnonAbuseScript is Script, Loader {
 
     UserData[] public userDatas;
     AnonAbuse public anonAbuse;
+    BonsaiRelay private bonsaiVerifyingRelay;
     address attackerAddress;
 
     uint256 constant NUM_ADDRESS = 8;
 
     function setUp() public {
-        anonAbuse = new AnonAbuse();
+        IRiscZeroVerifier verifier = new RiscZeroGroth16Verifier(ControlID.CONTROL_ID_0, ControlID.CONTROL_ID_1);
+        bonsaiVerifyingRelay = new BonsaiRelay(verifier);
+        anonAbuse = new AnonAbuse(bonsaiVerifyingRelay);
 
         string memory root = vm.projectRoot();
         for (uint i = 0; i < NUM_ADDRESS; i++) {

@@ -62,9 +62,9 @@ contract AnonAbuse is BonsaiCallbackReceiver {
 
     // Setter functions
     function entryPoint(
-        bytes32 imageId, 
-        bytes calldata journal, 
-        CallbackAuthorization calldata auth,
+        // bytes32 imageId, 
+        // bytes calldata journal, 
+        // CallbackAuthorization calldata auth,
         bytes32 groupMerkleRoot,
         address hackerAddress,
         address attackedAddress
@@ -74,15 +74,15 @@ contract AnonAbuse is BonsaiCallbackReceiver {
     uint256 hackerAddressAsUint = getGroupdIdFromAttackerAddress(hackerAddress);
 
     //require valid rugProof from Risc0 Bonsai VM
-    require(bonsaiRelay.callbackIsAuthorized(imageId, journal, auth), "Invalid Risc0 Proof");
+    // require(bonsaiRelay.callbackIsAuthorized(imageId, journal, auth), "Invalid Risc0 Proof");
 
     if (treeMetaDataByID[hackerAddressAsUint].merkleRoot != bytes32(0)) {
+        bytes32 oldMerkleRoot = treeMetaDataByID[hackerAddressAsUint].merkleRoot;
         updateTreeMetaDataByID(hackerAddressAsUint, groupMerkleRoot, attackedAddress);
         emit GroupUpdated(hackerAddressAsUint, oldMerkleRoot, groupMerkleRoot);
     } else {
-        bytes32 oldMerkleRoot = treeMetaDataByID[hackerAddressAsUint].merkleRoot;
         updateTreeMetaDataByID(hackerAddressAsUint, groupMerkleRoot, attackedAddress);        
-        emit GroupAdded(hackerAddressAsUint,  groupMerkleRoot);
+        emit GroupAdded(hackerAddressAsUint, groupMerkleRoot);
     }   
     }
 
